@@ -1,13 +1,15 @@
+import { getSession } from "next-auth/client";
 import Head from "next/head";
 import Header from "../components/Header";
+import Login from "../components/Login";
 
+export default function Home({ session }) {
+  if (session) return <Login />;
 
-export default function Home() {
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
         <title>Facebook</title>
-        <link rel="icon" href="/favicon.ico" />
       </Head>
       {/** HEADER */}
       <Header />
@@ -18,4 +20,13 @@ export default function Home() {
       </main>
     </div>
   );
+}
+
+export async function setServerSideProps(context) {
+  // Get The USER
+  const session = await getSession(context);
+
+  return {
+    props: { session },
+  };
 }
