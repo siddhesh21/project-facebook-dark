@@ -52,16 +52,28 @@ function Header() {
         </div>
       </div>
       {/** RIGHT */}
-      <div className="flex items-center sm:">
+      <div className="flex items-center sm:space-x-2 justify-end">
         {/**PROFILE PIC */}
         <p className="whitespace-nowrap font-semibold pr-3">
           Siddhesh Kankekar
         </p>
 
-        <ViewGridIcon className="icon" />
-        <ChatIcon className="icon" />
-        <BellIcon className="icon" />
-        <ChevronDownIcon className="icon" />
+        <ViewGridIcon
+          className="hidden xl:inline-flex p-2 h-10 w-10 bg-gray-200 
+        rounded-full text-gray-70 cursor-pointer hover: bg-gray-200"
+        />
+        <ChatIcon
+          className="hidden xl:inline-flex p-2 h-10 w-10 bg-gray-200 
+        rounded-full text-gray-70 cursor-pointer hover: bg-gray-200"
+        />
+        <BellIcon
+          className="hidden xl:inline-flex p-2 h-10 w-10 bg-gray-200 
+        rounded-full text-gray-70 cursor-pointer hover: bg-gray-200"
+        />
+        <ChevronDownIcon
+          className="hidden xl:inline-flex p-2 h-10 w-10 bg-gray-200 
+        rounded-full text-gray-70 cursor-pointer hover: bg-gray-200"
+        />
       </div>
     </div>
   );
