@@ -68,7 +68,7 @@ function Header() {
         />
 
         <p className="whitespace-nowrap font-semibold pr-3">
-          Siddhesh Kankekar
+          {session.user.name}
         </p>
 
         <ViewGridIcon
