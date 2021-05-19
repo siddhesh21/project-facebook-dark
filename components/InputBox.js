@@ -12,6 +12,7 @@ import firebase from "firebase";
 function InputBox() {
   const [session] = useSession();
   const inputRef = useRef(null);
+  const filePickerRef = useRef(null);
 
   const sendPost = (e) => {
     e.preventDefault();
@@ -27,6 +28,10 @@ function InputBox() {
     });
 
     inputRef.current.value = "";
+  };
+
+  const addImageToPost = (e) => {
+    e.preventDefault();
   };
 
   return (
@@ -71,6 +76,12 @@ function InputBox() {
         >
           <CameraIcon className="h-7 text-green-600" />
           <p className="text-xs sm:text-sm xl:text-base">Photo/ Video</p>
+          <input
+            ref={filePickerRef}
+            onChange={addImageToPost}
+            type="file"
+            hidden
+          />
         </div>
 
         <div
