@@ -5,11 +5,28 @@ import {
   CameraIcon,
   EmojiHappyIcon,
 } from "@heroicons/react/solid";
+import { useRef } from "react";
+import { db } from "../firebase";
+import firebase from "firebase";
 
 function InputBox() {
   const [session] = useSession();
+  const inputRef = useRef(null);
+
   const sendPost = (e) => {
     e.preventDefault();
+
+    if (!inputRef.current.value) return;
+
+    db.collection("posts").add({
+      message: inputRef.current.value,
+      name: session.user.name,
+      email: session.user.email,
+      image: session.user.image,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+
+    inputRef.current.value = "";
   };
 
   return (
@@ -27,6 +44,7 @@ function InputBox() {
         />
         <form className="flex flex-1">
           <input
+            ref={inputRef}
             className="rounded-full h-12 bg-gray-100 
           flex-grow px-5 focus:outline-none"
             type="text"
