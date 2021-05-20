@@ -5,33 +5,81 @@ import {
   CameraIcon,
   EmojiHappyIcon,
 } from "@heroicons/react/solid";
-import { useRef } from "react";
-import { db } from "../firebase";
+import { useRef, useState } from "react";
+import { db, storage } from "../firebase";
 import firebase from "firebase";
 
 function InputBox() {
   const [session] = useSession();
   const inputRef = useRef(null);
   const filePickerRef = useRef(null);
+  const [imageToPost, setImageToPost] = useState(null);
 
   const sendPost = (e) => {
     e.preventDefault();
 
     if (!inputRef.current.value) return;
 
-    db.collection("posts").add({
-      message: inputRef.current.value,
-      name: session.user.name,
-      email: session.user.email,
-      image: session.user.image,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    });
+    db.collection("posts")
+      .add({
+        message: inputRef.current.value,
+        name: session.user.name,
+        email: session.user.email,
+        image: session.user.image,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      })
+      .then((doc) => {
+        if (imageToPost) {
+          // Post Upload Images
+          const uploadTask = storage
+            .ref(`posts/${doc.id}`)
+            .putString(imageToPost, "data_url");
+
+          removeImage();
+
+          uploadTask.on(
+            "state_change",
+            null,
+            (error) => console.error(error),
+            () => {
+              //When the UPLOAD COMPLETES
+
+              storage
+                .ref("posts")
+                .child(doc.id)
+                .getDownloadURL()
+                .then((url) => {
+                  db.collection("posts").doc(doc.id).set(
+                    {
+                      postImage: url,
+                    },
+                    { merge: true }
+                  );
+                });
+              // UPDATE RULES on FIRESTORE
+            }
+          );
+        }
+      });
 
     inputRef.current.value = "";
   };
 
   const addImageToPost = (e) => {
-    e.preventDefault();
+    const reader = new FileReader();
+    if (e.target.files[0]) {
+      // READ that File as a DATA URL
+      reader.readAsDataURL(e.target.files[0]);
+    }
+    // READ that FILE
+    reader.onload = (readerEvent) => {
+      setImageToPost(readerEvent.target.result);
+    };
+    // NOW Image is LOADED in STORE
+  };
+
+  const removeImage = () => {
+    setImageToPost(null);
   };
 
   return (
@@ -60,7 +108,19 @@ function InputBox() {
             Submit
           </button>
         </form>
+
+        {imageToPost && (
+          <div
+            onClick={removeImage}
+            className="flex flex-col filter 
+            hover: brightness-110 transition duration-150 transform hover:scale-105 cursor-pointer"
+          >
+            <img className="h-10 object-contain" src={imageToPost} alt="" />
+            <p className="text-xs text-red-600 text-center">Remove</p>
+          </div>
+        )}
       </div>
+
       <div className="flex justify-evenly p-3 border-t">
         <div
           className="flex items-center space-x-1 hover: bg-gray-100 flex-grow 
@@ -71,6 +131,7 @@ function InputBox() {
         </div>
 
         <div
+          onClick={() => filePickerRef.current.click()}
           className="flex items-center space-x-1 hover: bg-gray-100 flex-grow 
         justify-center p-2 rounded-xl cursor-pointer"
         >
