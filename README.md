@@ -1,4 +1,6 @@
-# Facebook App (Dark Mode) deployed on Vercel: [link] (https://project-facebook-dark.vercel.app/)
+## Facebook App (Dark Mode):
+
+### Here is preview of it:
 
 Tools used in this build: Tailwind css, Next.js, NextAuth (Authentication), Firestore, Firebase Hooks, Deployed via Vercel, server side rendering and more.
 
