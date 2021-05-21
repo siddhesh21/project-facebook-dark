@@ -2,7 +2,7 @@ import InputBox from "./InputBox";
 import Posts from "./Posts";
 import Stories from "./Stories";
 
-function Feed() {
+function Feed({ posts }) {
   return (
     <div
       className="flex-grow h-screen pb-44 pt-6 mr-4 
@@ -14,7 +14,7 @@ function Feed() {
         {/** INPUT BOX */}
         <InputBox />
         {/** POSTS */}
-        <Posts />
+        <Posts posts={posts} />
       </div>
     </div>
   );

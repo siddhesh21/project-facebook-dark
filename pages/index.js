@@ -5,7 +5,7 @@ import Header from "../components/Header";
 import Login from "../components/Login";
 import Sidebar from "../components/Sidebar";
 import Widgets from "../components/Widgets";
-// import { db } from "../firebase";
+import { db } from "../firebase";
 
 export default function Home({ session, posts }) {
   if (!session) return <Login />;
@@ -31,15 +31,18 @@ export async function getServerSideProps(context) {
   // Get User
   const session = await getSession(context);
 
-  // const posts = await db.collection("posts").orderBy("timestamp", "desc").get();
+  // To get POSTS on LOAD or REFRESHED page
+  const posts = await db.collection("posts").orderBy("timestamp", "desc").get();
 
-  // const docs = posts.docs.map((post) => ({
-  //   id: post.id,
-  //   ...post.data(),
-  //   timestamp: null,
-  // }));
+  const docs = posts.docs.map((post) => ({
+    id: post.id,
+    ...post.data(),
+    timestamp: null,
+  }));
 
   return {
-    props: { session },
+    props: { session, posts: docs },
   };
 }
+// ----- http://localhost:3000/
+// ----- https://project-facebook-dark.vercel.app/
