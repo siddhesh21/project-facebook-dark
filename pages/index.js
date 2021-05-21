@@ -44,5 +44,4 @@ export async function getServerSideProps(context) {
     props: { session, posts: docs },
   };
 }
-// ----- http://localhost:3000/
-// ----- https://project-facebook-dark.vercel.app/
+// NEXTAUTH_URL=http://localhost:3000/
